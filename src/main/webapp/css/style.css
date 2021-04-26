@@ -1,0 +1,13 @@
+.menu {
+    float: left;
+    width: 200px;
+    height: 100%;
+    position: relative;
+}
+.header{
+    margin-left: 200px;
+    float: top;
+    width: 100%;
+    text-align: center;
+    position: fixed;
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+    <link href="css/style.css" rel="stylesheet" type="text/css"/>
+</h:head>
+
+<h:body>
+    <div class="menu">
+        <h:form id="form">
+            <p:tree value="#{treeEventsView.root}" var="model" selectionMode="single"
+                    selection="#{treeEventsView.selectedNode}">
+                <p:ajax event="select" listener="#{treeEventsView.onNodeSelect}" update="tabView"/>
+                <p:treeNode expandedIcon="pi pi-folder-open" collapsedIcon="pi pi-folder">
+                    <h:outputText value="#{model.name}"/>
+                </p:treeNode>
+
+                <p:treeNode type="content" icon="pi pi-file">
+                    <h:outputText value="#{model.name}"/>
+                </p:treeNode>
+            </p:tree>
+        </h:form>
+    </div>
+
+    <div class="header">
+        <p:tabView id="tabView">
+            <p:ajax event="tabClose" listener="#{treeEventsView.onTabClose}"/>
+            <c:forEach items="#{treeEventsView.tabs}" var="tab">
+                <p:tab title="#{tab.id}" closable="true">
+                    <h:panelGrid>
+                        <h:outputText value="#{tab.title}"/>
+                        <p:commandButton value="Show" type="button" icon="pi pi-external-link" onclick="PF('#{tab.titleStyle}').show()"/>
+                        <p:dialog widgetVar="#{tab.titleStyle}" minHeight="40" width="350" showEffect="fade">
+                            <p class="p-m-0" id="${tab.titleStyle}">Content</p>
+                            <p class="p-m-0" id="${tab.titleStyle}+A">Content</p>
+
+                            <script type="text/javascript">
+                                var text, parser, xmlDoc;
+                                text = "${tab.title}";
+                                parser = new DOMParser();
+                                xmlDoc = parser.parseFromString(text,"text/xml");
+                                if (text.includes('f1')){
+                                    document.getElementById("${tab.titleStyle}").innerHTML =
+                                        xmlDoc.getElementsByTagName("f1")[0].childNodes[0].nodeValue;
+                                    document.getElementById("${tab.titleStyle}+A").innerHTML =
+                                        xmlDoc.getElementsByTagName("f2")[0].childNodes[0].nodeValue;
+                                }
+                               else {
+                                    document.getElementById("${tab.titleStyle}").innerHTML =
+                                        xmlDoc.getElementsByTagName("f3")[0].childNodes[0].nodeValue;
+                                    document.getElementById("${tab.titleStyle}+A").innerHTML =
+                                        xmlDoc.getElementsByTagName("f4")[0].childNodes[0].nodeValue;
+                                }
+                            </script>
+
+                        </p:dialog>
+                    </h:panelGrid>
+                </p:tab>
+            </c:forEach>
+        </p:tabView>
+    </div>
+    
+</h:body>
+
+</html>
